@@ -9,14 +9,13 @@ public class Task5 {
            Сложность как раз и O(n^2), потому что мы проходим по всем значениям треугольника, а по факту
            это немного урезанная квадратная матрица.
     */
-    public static void solve(List<List<Integer>> triangle) {
+    public static int solve(List<List<Integer>> triangle) {
         if (triangle == null || triangle.isEmpty()) {
-            return;
+            return - 1;
         }
-
+        // Используем, чтобы отслеживать пути с наименьшим весом. Можно было бы менять значения на месте
+        // в самом треугольнике, но тогда возникли бы проблемы при работе с immutable листами
         List<Integer> lastRow = new ArrayList<>(triangle.getLast());
-        List<String> path = new ArrayList<>();
-        path.add(String.valueOf(lastRow.getFirst()));
 
         for (int i = triangle.size() - 2; i >= 0; i--) {
             List<Integer> curRow = triangle.get(i);
@@ -25,19 +24,8 @@ public class Task5 {
                 int minPath = Math.min(lastRow.get(j), lastRow.get(j + 1));
                 lastRow.set(j, curRow.get(j) + minPath);
             }
-
-            path.addFirst(String.valueOf(curRow.getFirst()));
         }
-
-        StringBuilder pathResult = new StringBuilder();
-        for (int i = 0; i < path.size(); i++) {
-            pathResult.append(path.get(i));
-            if (i < path.size() - 1) {
-                pathResult.append(" → ");
-            }
-        }
-        System.out.println("Минимальный путь: " + pathResult);
-        System.out.println("Результат: " + lastRow.getFirst());
+        return lastRow.getFirst();
 
     }
 
@@ -48,8 +36,8 @@ public class Task5 {
         triangle1.add(List.of(6, 5, 7));
         triangle1.add(List.of(4, 1, 8, 3));
 
-        solve(triangle1);
-        System.out.println();
+
+        System.out.println("Результат для 1го тестового треугольника: " + solve(triangle1));
 
         List<List<Integer>> triangle2 = new ArrayList<>();
         triangle2.add(List.of(-1));
@@ -57,8 +45,7 @@ public class Task5 {
         triangle2.add(List.of(1, -1, -3));
         triangle2.add(List.of(4, 2, 1, 3));
 
-        solve(triangle2);
-        System.out.println();
+        System.out.println("Результат для 2го тестового треугольника: " + solve(triangle2));
 
         List<List<Integer>> triangle3 = new ArrayList<>();
         triangle3.add(List.of(6));
@@ -66,6 +53,6 @@ public class Task5 {
         triangle3.add(List.of(4, -2, 1));
         triangle3.add(List.of(8, 4, 3, 5));
 
-        solve(triangle3);
+        System.out.println("Результат для 3го треугольника: " + solve(triangle3));
     }
 }
